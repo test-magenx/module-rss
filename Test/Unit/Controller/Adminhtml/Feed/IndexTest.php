@@ -58,9 +58,6 @@ class IndexTest extends TestCase
      */
     protected $response;
 
-    /**
-     * @inheritDoc
-     */
     protected function setUp(): void
     {
         $this->rssManager = $this->createPartialMock(RssManager::class, ['getProvider']);
@@ -71,8 +68,7 @@ class IndexTest extends TestCase
         $request->expects($this->once())->method('getParam')->with('type')->willReturn('rss_feed');
 
         $this->response = $this->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['sendResponse'])
-            ->addMethods(['setHeader', 'setBody'])
+            ->setMethods(['setHeader', 'setBody', 'sendResponse'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
@@ -89,9 +85,7 @@ class IndexTest extends TestCase
         );
         $objectManager = $controllerArguments['context']->getObjectManager();
         $urlInterface = $this->getMockForAbstractClass(UrlInterface::class);
-        $objectManager
-            ->method('get')
-            ->with(UrlInterface::class)
+        $objectManager->expects($this->at(0))->method('get')->with(UrlInterface::class)
             ->willReturn($urlInterface);
         $this->controller = $objectManagerHelper->getObject(
             AdminIndex::class,
@@ -99,10 +93,7 @@ class IndexTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testExecute(): void
+    public function testExecute()
     {
         $this->scopeConfigInterface->expects($this->once())->method('getValue')->willReturn(true);
         $dataProvider = $this->getMockForAbstractClass(DataProviderInterface::class);
@@ -121,10 +112,7 @@ class IndexTest extends TestCase
         $this->controller->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function testExecuteWithException(): void
+    public function testExecuteWithException()
     {
         $this->scopeConfigInterface->expects($this->once())->method('getValue')->willReturn(true);
         $dataProvider = $this->getMockForAbstractClass(DataProviderInterface::class);
