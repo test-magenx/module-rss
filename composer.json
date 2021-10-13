@@ -1,5 +1,5 @@
 {
-    "name": "test-magenx/module-rss",
+    "name": "magenxcommerce/module-rss",
     "description": "N/A",
     "config": {
         "sort-packages": true
